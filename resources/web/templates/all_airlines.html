@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+  <!-- Navigation guide -->
+  / <a href="/airlines">Airlines</a>
+
+  <p class="lead">US Domestic Airlines</p>
+  <ul class="nav nav-pills">
+    {% for airline in airlines -%}
+    <li class="button">
+      <a href="/airline/{{airline.Carrier}}">{{airline.Carrier}}</a>
+    </li>
+    {% endfor -%}
+  </ul>
+  
+  <p style="margin-top: 20px;">Click to go to the FBID - Practica Creativa <a href="http://127.0.0.1:5001/flights/delays/predict_kafka">.../flights/delays/predict_kafka</a> page.</p>
+{% endblock %}
