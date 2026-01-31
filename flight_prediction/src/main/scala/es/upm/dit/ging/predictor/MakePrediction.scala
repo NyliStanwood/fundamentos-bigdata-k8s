@@ -198,6 +198,7 @@ object MakePrediction {
     
     kafkaQuery.awaitTermination()
     consoleOutput.awaitTermination()
+    spark.streams.awaitAnyTermination()
   }
 
 }
