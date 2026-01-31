@@ -196,6 +196,7 @@ object MakePrediction {
     println("*** Sending results to: MongoDB + Kafka (flight-delay-ml-response) ***")
     println("="*80 + "\n")
     
+    kafkaQuery.awaitTermination()
     consoleOutput.awaitTermination()
   }
 

@@ -16,6 +16,7 @@ minikube dashboard -p practica-creativa
 
 & minikube -p practica-creativa docker-env | Invoke-Expression
 eval $(minikube docker-env)
+eval $(minikube -p practica-creativa docker-env)
 docker build -t spark-master-custom:3.5.3 -f Dockerfile.spark-master .
 docker build --no-cache -t spark-worker-1-custom:3.5.3 -f Dockerfile.spark-worker .
 docker build --no-cache -t spark-worker-2-custom:3.5.3 -f Dockerfile.spark-worker .
@@ -23,6 +24,11 @@ docker build --no-cache -t sparksubmit-custom:3.5.3 -f Dockerfile.sparksubmit .
 docker build --no-cache -t mongo-cust-c:7.0 -f Dockerfile.mongo .
 docker build --no-cache -t sparksubmit-custom:3.5.3 -f Dockerfile.sparksubmit .
 docker build --no-cache -t flask-custom:3.5.3 -f Dockerfile.flask .
+eval $(minikube -p practica-creativa docker-env -u)
+
+
+minikube -p practica-creativa image build -t flask-custom:3.5.3 -f Dockerfile.flask .
+
 
 & minikube -p practica-creativa docker-env -u | Invoke-Expression
 & minikube -p practica-creativa ssh docker images
@@ -31,6 +37,8 @@ docker build --no-cache -t flask-custom:3.5.3 -f Dockerfile.flask .
 kubectl create namespace pc-k8s
 kubectl apply -f k8s/
 kubectl get pods -n pc-k8s
+
+
 minikube -p practica-creativa service flask-svc -n pc-k8s
 
 
@@ -63,12 +71,21 @@ minikube delete -p practica-creativa
 
 & minikube -p practica-creativa docker-env -u | Invoke-Expression
 
+kubectl get flask-svc -n pc-k8s
+kubectl expose deployment flask --type=NodePort --port=5001 -n pc-k8s
+
 minikube -p practica-creativa ip
 192.168.58.2
 minikube -p practica-creativa tunnel
 minikube -p practica-creativa service flask-svc -n pc-k8s
+kubectl port-forward --address 0.0.0.0 -n pc-k8s svc/flask-svc 8888:5001
 
 
+SPARKSUBMIT 
+kubectl delete -n pc-k8s -f k8s/sparksubmit-job.yaml
+kubectl apply -f k8s/
+
+kubectl exec -it sparksubmit-dbppq -n pc-k8s -- rm -rf /tmp/kafka_checkpoint
 
 FLASK
 kubectl delete -f k8s/flask-deployment.yaml -n pc-k8s
@@ -83,20 +100,33 @@ kubectl delete -f k8s/kafka-init-job.yaml -n pc-k8s
 kubectl delete -f k8s/kafka-deployment.yaml -n pc-k8s
 kubectl apply -f k8s/
 kubectl get pods -n pc-k8s
-
-kubectl exec -n pc-k8s kafka-76b7d4d4c-729px -- bash -c "/opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092"
+kubectl exec -n pc-k8s kafka-6896765b47-v8spb -- bash -c "/opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092"
 
 
 
 mongo
-
 kubectl delete -f k8s/mongo-deployment.yaml -n pc-k8s
 kubectl delete pvc mongo-pvc -n pc-k8s
 kubectl get pvc -n pc-k8s
 kubectl apply -f k8s/
 kubectl get pods -n pc-k8s
 
+kubectl exec -it -n pc-k8s mongo-68649575d-jrsvv -- bash 
+mongosh -u root -p example
+use agile_data_science
+db.origin_dest_distances.countDocuments()
+db.origin_dest_distances.findOne()
+db.flight_delay_ml_response.findOne()
+
 kubectl logs -f mongo-68649575d-hbzhl -n pc-k8s
 kubectl exec -it mongo-7c7df99999-25p5t -n pc-k8s -- head -20 /docker-entrypoint-initdb.d/mongo-init.sh
 kubectl exec -it spark-worker-1-76bbf76bd4-9k2s9 -n pc-k8s -- /bin/bash
 mongosh -u root -p example
+
+
+
+# logs
+kubectl logs -n pc-k8s -f kafka-6896765b47-k9c7k 
+
+# describe PODS
+kubectl describe pod kafka-5b79dd7b94-jph77 -n pc-k8s
