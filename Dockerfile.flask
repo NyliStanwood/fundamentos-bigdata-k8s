@@ -1,0 +1,20 @@
+# Dockerfile for Flask App
+FROM python:3.9
+
+# Set working directory
+WORKDIR /resources/web
+
+# Copy the entire /resources directory from your repository into the image
+COPY ./resources /resources
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r /resources/requirements.txt
+
+# Set environment variable
+ENV PROJECT_HOME=/resources
+
+# Expose Flask port
+EXPOSE 5001
+
+# Default command
+CMD ["python", "predict_flask.py"]

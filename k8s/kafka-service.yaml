@@ -1,14 +1,33 @@
-# Kafka Service
+# # Kafka Service
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: kafka-svc
+#   namespace: pc-k8s
+# spec:
+#   selector:
+#     app: kafka
+#   ports:
+#     - protocol: TCP
+#       port: 9092
+#       targetPort: 9092
+#   type: ClusterIP
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka
+  name: kafka-svc
   namespace: pc-k8s
 spec:
   selector:
     app: kafka
   ports:
-    - protocol: TCP
+    - name: broker
+      protocol: TCP
       port: 9092
       targetPort: 9092
+    - name: controller
+      protocol: TCP
+      port: 9093
+      targetPort: 9093
   type: ClusterIP

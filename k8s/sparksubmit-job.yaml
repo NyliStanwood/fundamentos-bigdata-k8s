@@ -12,9 +12,13 @@ spec:
           image: sparksubmit-custom:3.5.3
           env:
             - name: SPARK_MASTER_URL
-              value: "spark://spark-master:7077"
+              value: "spark://spark-master-svc:7077"
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             - name: MONGO_HOST
-              value: "mongo"
+              value: "mongo-svc"
             - name: MONGO_PORT
               value: "27017"
             - name: MONGO_USER
@@ -25,18 +29,30 @@ spec:
               value: "admin"
             - name: MONGO_DB
               value: "agile_data_science"
-          volumeMounts:
-            - name: models
-              mountPath: /practica_creativa/models
+          command:
+            - "spark-submit"
+            - "--class"
+            - "es.upm.dit.ging.predictor.MakePrediction"
+            - "--master"
+            - "$(SPARK_MASTER_URL)"
+            - "--conf"
+            - "spark.executor.memory=512m"
+            - "--conf"
+            - "spark.driver.host=$(POD_IP)"
+            - "--conf"
+            - "spark.driver.memory=512m"
+            - "--conf"
+            - "spark.cores.max=1"
+            - "--packages"
+            - "org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3"
+            - "/practica_creativa/flight_prediction/target/scala-2.12/flight_prediction_2.12-0.1.jar"
+
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "2"
+              memory: "800Mi"
+              cpu: "0.5"
             limits:
-              memory: "2Gi"
-              cpu: "2"
-      volumes:
-        - name: models
-          hostPath:
-            path: /models
+              memory: "1024Mi"
+              cpu: "1"
+
       restartPolicy: OnFailure

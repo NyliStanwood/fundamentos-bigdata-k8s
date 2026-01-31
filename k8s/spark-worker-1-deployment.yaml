@@ -25,7 +25,7 @@ spec:
             - name: SPARK_MODE
               value: "worker"
             - name: SPARK_MASTER_URL
-              value: "spark://spark-master:7077"
+              value: "spark://spark-master-svc:7077"
             - name: SPARK_RPC_AUTHENTICATION_ENABLED
               value: "no"
             - name: SPARK_RPC_ENCRYPTION_ENABLED
@@ -33,21 +33,16 @@ spec:
             - name: SPARK_SSL_ENABLED
               value: "no"
             - name: SPARK_WORKER_CORES
-              value: "2"
+              value: "1"
             - name: SPARK_WORKER_MEMORY
-              value: "2g"
-          volumeMounts:
-            - name: models
-              mountPath: /practica_creativa/models
+              value: "1024m"
+
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "2"
+              memory: "1Gi"
+              cpu: "1"
             limits:
-              memory: "2Gi"
-              cpu: "2"
-      volumes:
-        - name: models
-          hostPath:
-            path: /models
+              memory: "1.5Gi"
+              cpu: "1"
+
       restartPolicy: Always

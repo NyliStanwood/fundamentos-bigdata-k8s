@@ -15,10 +15,14 @@ RUN apt-get update && \
 # Install SDKMAN
 RUN curl -s "https://get.sdkman.io" | bash
 
-# Install Java 8 via SDKMAN
+# Install Java 8, Scala 2.12.10, and sbt via SDKMAN
 RUN bash -c "source /root/.sdkman/bin/sdkman-init.sh && \
     sdk install java 8.0.302-open && \
-    sdk default java 8.0.302-open"
+    sdk install scala 2.12.10 && \
+    sdk install sbt 1.11.7 && \
+    sdk default java 8.0.302-open && \
+    sdk default scala 2.12.10 && \
+    sdk default sbt 1.11.7"
 
 # Set JAVA_HOME and JDK_HOME environment variables for Java 8
 ENV JAVA_HOME=/root/.sdkman/candidates/java/8.0.302-open
@@ -35,11 +39,23 @@ ENV SPARK_RPC_AUTHENTICATION_ENABLED=no
 ENV SPARK_RPC_ENCRYPTION_ENABLED=no
 ENV SPARK_SSL_ENABLED=no
 
+# Copy the entire repository into the container
+COPY . /practica_creativa/
+
+# Copy models directory into the image
+COPY ./models /practica_creativa/models
+# Build the Scala project with sbt
+WORKDIR /practica_creativa/flight_prediction
+RUN bash -c "source /root/.sdkman/bin/sdkman-init.sh && sbt clean package"
+
+
+
+
 # Expose port
 EXPOSE 8081
 
 # Accept SPARK_MASTER_URL as environment variable
-ENV SPARK_MASTER_URL=spark://spark-master:7077
+ENV SPARK_MASTER_URL=spark://spark-master-svc:7077
 
 # Start Spark Worker
 CMD spark-class org.apache.spark.deploy.worker.Worker $SPARK_MASTER_URL --webui-port 8081

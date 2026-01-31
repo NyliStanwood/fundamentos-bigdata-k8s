@@ -16,15 +16,27 @@ spec:
       labels:
         app: spark-master
     spec:
+      enableServiceLinks: false
       containers:
         - name: spark-master
           image: spark-master-custom:3.5.3
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master \
+              --host $(SPARK_MASTER_HOST) \
+              --port 7077 \
+              --webui-port 8080
           ports:
             - containerPort: 8080
             - containerPort: 7077
           env:
             - name: SPARK_MODE
               value: "master"
+            - name: SPARK_MASTER_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             - name: SPARK_RPC_AUTHENTICATION_ENABLED
               value: "no"
             - name: SPARK_RPC_ENCRYPTION_ENABLED
@@ -33,9 +45,9 @@ spec:
               value: "no"
           resources:
             requests:
-              memory: "1Gi"
-              cpu: "1"
+              memory: "512M"
+              cpu: "0.5"
             limits:
-              memory: "1Gi"
+              memory: "768Mi"
               cpu: "1"
       restartPolicy: Always

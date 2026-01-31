@@ -60,11 +60,14 @@ ENV MONGO_AUTH_DB=admin
 ENV MONGO_DB=agile_data_science
 
 # Spark Master connection
-ENV SPARK_MASTER_URL=spark://spark-master:7077
+ENV SPARK_MASTER_URL=spark://spark-master-svc:7077
 
 # Default command: run spark-submit connecting to Spark cluster
 CMD spark-submit \
      --class es.upm.dit.ging.predictor.MakePrediction \
      --master $SPARK_MASTER_URL \
+     --conf spark.executor.memory=400m \
+     --conf spark.driver.memory=400m \
+     --conf spark.cores.max=1 \
      --packages org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3 \
      /practica_creativa/flight_prediction/target/scala-2.12/flight_prediction_2.12-0.1.jar

@@ -13,13 +13,19 @@ EXPOSE 27017
 
 # Set working directory to root so init scripts can use /data paths
 WORKDIR /
+# Copy the entire /resources directory from your repository into the image
+COPY ./resources /resources
 
 # Create directories for data downloads with proper permissions
-RUN mkdir -p /data /models && chown -R mongodb:mongodb /data /models
+RUN mkdir -p /data /models \
+    && chown -R mongodb:mongodb /data /models \
+    && chmod -R 777 /data /models
 
 # # Copy initialization script that runs after MongoDB starts with auth
 COPY resources/mongo-init.sh /docker-entrypoint-initdb.d/
-RUN chmod +x /docker-entrypoint-initdb.d/mongo-init.sh
+# RUN chmod +x /docker-entrypoint-initdb.d/mongo-init.sh
+RUN sed -i 's/\r$//' /docker-entrypoint-initdb.d/mongo-init.sh && \
+    chmod +x /docker-entrypoint-initdb.d/mongo-init.sh
 
 # Use default mongo entrypoint which handles MONGO_INITDB_ROOT_USERNAME/PASSWORD
 # The mongo-init.sh script will run automatically after MongoDB initializes

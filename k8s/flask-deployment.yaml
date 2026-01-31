@@ -18,31 +18,19 @@ spec:
     spec:
       containers:
         - name: flask
-          image: python:3.9
+          image: flask-custom:3.5.3
           workingDir: /resources/web
           env:
             - name: PROJECT_HOME
               value: /resources
           ports:
             - containerPort: 5001
-          volumeMounts:
-            - name: resources
-              mountPath: /resources
-          command:
-            [
-              "sh",
-              "-c",
-              "sleep 25 && pip install -r /resources/requirements.txt && python predict_flask.py",
-            ]
           resources:
             requests:
-              memory: "1Gi"
-              cpu: "1"
+              memory: "512Mi"
+              cpu: "0.5"
             limits:
-              memory: "1Gi"
+              memory: "512Mi"
               cpu: "1"
-      volumes:
-        - name: resources
-          hostPath:
-            path: /resources
+      # No volumes needed; resources are in the image
       restartPolicy: Always

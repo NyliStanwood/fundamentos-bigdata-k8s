@@ -52,8 +52,9 @@ object MakePrediction {
     val df = spark
       .readStream
       .format("kafka")
-      .option("kafka.bootstrap.servers", "kafka:9092")
+      .option("kafka.bootstrap.servers", "kafka-svc.pc-k8s.svc.cluster.local:9092")
       .option("subscribe", "flight-delay-ml-request")
+      .option("startingOffsets", "latest")
       .load()
     df.printSchema()
 
@@ -153,7 +154,7 @@ object MakePrediction {
     val dataStreamWriter = finalPredictions
       .writeStream
       .format("mongodb")
-      .option("spark.mongodb.connection.uri", "mongodb://root:example@mongo:27017/agile_data_science?authSource=admin")
+      .option("spark.mongodb.connection.uri", "mongodb://root:example@mongo-svc:27017/agile_data_science?authSource=admin")
       .option("spark.mongodb.database", "agile_data_science")
       .option("checkpointLocation", "/tmp")
       .option("spark.mongodb.collection", "flight_delay_ml_response")
@@ -170,9 +171,10 @@ object MakePrediction {
     val kafkaStreamWriter = kafkaOutput
       .writeStream
       .format("kafka")
-      .option("kafka.bootstrap.servers", "kafka:9092")
+      .option("kafka.bootstrap.servers", "kafka-svc.pc-k8s.svc.cluster.local:9092")
       .option("topic", "flight-delay-ml-response")
       .option("checkpointLocation", "/tmp/kafka_checkpoint")
+      .option("startingOffsets", "latest")
       .outputMode("append")
     
     // run the Kafka query
