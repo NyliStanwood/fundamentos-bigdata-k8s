@@ -1,0 +1,14 @@
+# Spark Worker 1 Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-worker-1
+  namespace: pc-k8s
+spec:
+  selector:
+    app: spark-worker-1
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+  type: ClusterIP

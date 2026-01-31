@@ -16,7 +16,7 @@ app = Flask(__name__)
 from flask_socketio import SocketIO, emit, join_room
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
-client = MongoClient(host='mongo', port=27017, username='root', password='example', authSource='admin')
+client = MongoClient(host='mongo-svc', port=27017, username='root', password='example', authSource='admin')
 
 from pyelasticsearch import ElasticSearch
 elastic = ElasticSearch(config.ELASTIC_URL)
@@ -29,7 +29,7 @@ import datetime
 
 # Setup Kafka
 from kafka import KafkaProducer, KafkaConsumer
-producer = KafkaProducer(bootstrap_servers=['kafka:9092'],api_version=(0,10))
+producer = KafkaProducer(bootstrap_servers=['kafka-svc:9092'],api_version=(0,10))
 PREDICTION_TOPIC = 'flight-delay-ml-request'
 RESPONSE_PREDICTION_TOPIC = 'flight-delay-ml-response'
 

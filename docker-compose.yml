@@ -72,33 +72,12 @@ services:
     networks:
       - flight-network
 
-  training:
-    build:
-      context: .
-      dockerfile: Dockerfile.training
-    container_name: ml-training
-    restart: on-failure
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
-    cpus: "1.0"
-    mem_limit: "2g"
-    pids_limit: 1024
-    volumes:
-      - ./resources:/resources
-      - ./data:/data
-      - ./models:/models
-    networks:
-      - flight-network
-
   # Spark Master
   spark-master:
     build:
       context: .
       dockerfile: Dockerfile.spark-master
-    image: spark-master:3.5.3
+    image: spark-master-custom:3.5.3
     container_name: spark-master
     ports:
       - "8080:8080"
@@ -125,7 +104,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.spark-worker
-    image: spark-worker-1:3.5.3
+    image: spark-worker-1-custom:3.5.3
     container_name: spark-worker-1
     depends_on:
       - spark-master
@@ -158,7 +137,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.spark-worker
-    image: spark-worker-2:3.5.3
+    image: spark-worker-2-custom:3.5.3
     container_name: spark-worker-2
     depends_on:
       - spark-master
@@ -190,6 +169,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.sparksubmit
+    image: sparksubmit-custom:3.5.3
     container_name: sparksubmit
     depends_on:
       - spark-master

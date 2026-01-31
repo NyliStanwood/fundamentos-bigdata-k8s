@@ -1,0 +1,19 @@
+# Spark Master Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-master
+  namespace: pc-k8s
+spec:
+  selector:
+    app: spark-master
+  ports:
+    - name: web-ui
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: cluster
+      protocol: TCP
+      port: 7077
+      targetPort: 7077
+  type: ClusterIP

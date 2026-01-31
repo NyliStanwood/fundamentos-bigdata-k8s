@@ -1,0 +1,42 @@
+# Spark Submit Job
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sparksubmit
+  namespace: pc-k8s
+spec:
+  template:
+    spec:
+      containers:
+        - name: sparksubmit
+          image: sparksubmit-custom:3.5.3
+          env:
+            - name: SPARK_MASTER_URL
+              value: "spark://spark-master:7077"
+            - name: MONGO_HOST
+              value: "mongo"
+            - name: MONGO_PORT
+              value: "27017"
+            - name: MONGO_USER
+              value: "root"
+            - name: MONGO_PASS
+              value: "example"
+            - name: MONGO_AUTH_DB
+              value: "admin"
+            - name: MONGO_DB
+              value: "agile_data_science"
+          volumeMounts:
+            - name: models
+              mountPath: /practica_creativa/models
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "2"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+      volumes:
+        - name: models
+          hostPath:
+            path: /models
+      restartPolicy: OnFailure

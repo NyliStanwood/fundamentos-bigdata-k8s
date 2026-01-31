@@ -1,0 +1,30 @@
+docker-compose down -v
+docker-compose build --no-cache
+docker-compose up -d
+docker-compose down
+
+minikube stop -p practica-creativa
+minikube start -p practica-creativa --cpus=4 --memory=8192
+
+# create the cluster
+minikube start --driver=docker -p practica-creativa
+minikube addons enable registry -p practica-creativa
+minikube addons enable metrics-server -p practica-creativa
+minikube dashboard -p practica-creativa
+
+
+# create specifi namespace
+kubectl create namespace pc-k8s
+kubectl apply -f k8s/
+
+minikube dashboard -p practica-creativa
+
+
+
+
+# delete resources
+kubectl delete all --all -n pc-k8s
+kubectl delete pvc --all -n pc-k8s
+kubectl delete configmap --all -n pc-k8s
+kubectl delete secret --all -n pc-k8s
+kubectl delete namespace pc-k8s

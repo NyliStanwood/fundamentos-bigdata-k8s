@@ -119,7 +119,6 @@ lib/
 metals.sbt
 
 # Docker & Containerization
-.dockerignore
 .docker/
 
 # Environment & Config (if containing secrets)
@@ -145,3 +144,4 @@ airflow/logs/
 airflow/plugins/
 airflow/dags/__pycache__/
 flight_prediction/project/project/project/target/config-classes/$9c436159ad694f738665.cache
+dagss/setup.py

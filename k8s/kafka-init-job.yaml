@@ -1,0 +1,16 @@
+# Kafka Init Job (Topic Creation)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-init
+  namespace: pc-k8s
+spec:
+  template:
+    spec:
+      containers:
+        - name: kafka-init
+          image: apache/kafka:3.9.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - "sleep 10 && /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 1 --topic flight-delay-ml-request --if-not-exists && /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 1 --topic flight-delay-ml-response --if-not-exists"
+      restartPolicy: OnFailure
