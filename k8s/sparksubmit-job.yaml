@@ -36,11 +36,11 @@ spec:
             - "--master"
             - "$(SPARK_MASTER_URL)"
             - "--conf"
-            - "spark.executor.memory=512m"
+            - "spark.executor.memory=1536m"
             - "--conf"
             - "spark.driver.host=$(POD_IP)"
             - "--conf"
-            - "spark.driver.memory=512m"
+            - "spark.driver.memory=1536m"
             - "--conf"
             - "spark.cores.max=1"
             - "--packages"
@@ -49,10 +49,10 @@ spec:
 
           resources:
             requests:
-              memory: "800Mi"
+              memory: "2Gi"
               cpu: "0.5"
             limits:
-              memory: "1024Mi"
+              memory: "2Gi"
               cpu: "1"
 
       restartPolicy: OnFailure

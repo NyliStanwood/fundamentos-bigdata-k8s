@@ -8,7 +8,7 @@ docker-compose down
 
 
 # create the cluster
-minikube start --driver=docker -p practica-creativa --cpus=4 --memory=8000
+minikube start --driver=docker -p practica-creativa --cpus=7 --memory=7000mb --driver=docker
 minikube addons list -p practica-creativa
 minikube addons enable registry -p practica-creativa
 minikube addons enable metrics-server -p practica-creativa
