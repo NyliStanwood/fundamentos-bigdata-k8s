@@ -19,6 +19,7 @@ spec:
       containers:
         - name: flask
           image: flask-custom:3.5.3
+          imagePullPolicy: IfNotPresent
           workingDir: /resources/web
           env:
             - name: PROJECT_HOME

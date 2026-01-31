@@ -10,6 +10,7 @@ spec:
       containers:
         - name: sparksubmit
           image: sparksubmit-custom:3.5.3
+          imagePullPolicy: IfNotPresent
           env:
             - name: SPARK_MASTER_URL
               value: "spark://spark-master-svc:7077"

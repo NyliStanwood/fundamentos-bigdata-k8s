@@ -19,6 +19,7 @@ spec:
       containers:
         - name: spark-worker-1
           image: spark-worker-1-custom:3.5.3
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081
           env:

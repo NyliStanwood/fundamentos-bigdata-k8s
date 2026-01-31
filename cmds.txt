@@ -96,7 +96,7 @@ kubectl get pvc -n pc-k8s
 kubectl apply -f k8s/
 kubectl get pods -n pc-k8s
 
-kubectl logs -f sparksubmit-x8ckn -n pc-k8s
+kubectl logs -f mongo-68649575d-hbzhl -n pc-k8s
 kubectl exec -it mongo-7c7df99999-25p5t -n pc-k8s -- head -20 /docker-entrypoint-initdb.d/mongo-init.sh
 kubectl exec -it spark-worker-1-76bbf76bd4-9k2s9 -n pc-k8s -- /bin/bash
 mongosh -u root -p example
