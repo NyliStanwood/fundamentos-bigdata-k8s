@@ -71,7 +71,7 @@ data/*.orc
 data/*.json
 
 # Machine Learning Models (Large Artifacts)
-models/
+
 *.pkl
 *.pickle
 *.joblib

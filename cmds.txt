@@ -15,6 +15,7 @@ minikube addons enable metrics-server -p practica-creativa
 minikube dashboard -p practica-creativa
 
 & minikube -p practica-creativa docker-env | Invoke-Expression
+eval $(minikube docker-env)
 docker build -t spark-master-custom:3.5.3 -f Dockerfile.spark-master .
 docker build --no-cache -t spark-worker-1-custom:3.5.3 -f Dockerfile.spark-worker .
 docker build --no-cache -t spark-worker-2-custom:3.5.3 -f Dockerfile.spark-worker .
