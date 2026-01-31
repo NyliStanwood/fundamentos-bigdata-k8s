@@ -12,5 +12,5 @@ spec:
           image: apache/kafka:3.9.0
           command: ["/bin/sh", "-c"]
           args:
-            - "sleep 10 && /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka-svc:9092 --replication-factor 1 --partitions 1 --topic flight-delay-ml-request --if-not-exists && /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka-svc:9092 --replication-factor 1 --partitions 1 --topic flight-delay-ml-response --if-not-exists"
+            - "sleep 10 && /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka-svc.pc-k8s.svc.cluster.local:9092 --replication-factor 1 --partitions 1 --topic flight-delay-ml-request --if-not-exists && /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka-svc.pc-k8s.svc.cluster.local:9092 --replication-factor 1 --partitions 1 --topic flight-delay-ml-response --if-not-exists"
       restartPolicy: OnFailure
