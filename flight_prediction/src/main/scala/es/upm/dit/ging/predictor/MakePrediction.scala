@@ -174,7 +174,7 @@ object MakePrediction {
       .option("kafka.bootstrap.servers", "kafka-svc.pc-k8s.svc.cluster.local:9092")
       .option("topic", "flight-delay-ml-response")
       .option("checkpointLocation", "/tmp/kafka_checkpoint")
-      .option("startingOffsets", "latest")
+      // .option("startingOffsets", "latest")
       .outputMode("append")
     
     // run the Kafka query
