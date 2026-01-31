@@ -31,22 +31,21 @@ spec:
             - name: MONGO_DB
               value: "agile_data_science"
           command:
-            - "spark-submit"
-            - "--class"
-            - "es.upm.dit.ging.predictor.MakePrediction"
-            - "--master"
-            - "$(SPARK_MASTER_URL)"
-            - "--conf"
-            - "spark.executor.memory=1536m"
-            - "--conf"
-            - "spark.driver.host=$(POD_IP)"
-            - "--conf"
-            - "spark.driver.memory=1536m"
-            - "--conf"
-            - "spark.cores.max=1"
-            - "--packages"
-            - "org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3"
-            - "/practica_creativa/flight_prediction/target/scala-2.12/flight_prediction_2.12-0.1.jar"
+            - "/bin/sh"
+            - "-c"
+            - |
+              echo "Delaying spark-submit job for 30 seconds..."
+              sleep 30
+              echo "Starting spark-submit job."
+              spark-submit \
+                --class es.upm.dit.ging.predictor.MakePrediction \
+                --master $(SPARK_MASTER_URL) \
+                --conf spark.executor.memory=1536m \
+                --conf spark.driver.host=$(POD_IP) \
+                --conf spark.driver.memory=1536m \
+                --conf spark.cores.max=1 \
+                --packages org.mongodb.spark:mongo-spark-connector_2.12:10.4.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3 \
+                /practica_creativa/flight_prediction/target/scala-2.12/flight_prediction_2.12-0.1.jar
 
           resources:
             requests:

@@ -44,6 +44,9 @@ spec:
               value: "1"
             - name: CLUSTER_ID
               value: "5L6g3nShT-eMCtK--X86sw"
+          volumeMounts:
+            - name: kafka-persistent-storage
+              mountPath: /var/lib/kafka/data
           resources:
             requests:
               memory: "512Mi"
@@ -51,4 +54,8 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "1"
+      volumes:
+        - name: kafka-persistent-storage
+          persistentVolumeClaim:
+            claimName: kafka-pvc
       restartPolicy: Always
