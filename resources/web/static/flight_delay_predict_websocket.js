@@ -1,5 +1,10 @@
 // Initialize Socket.IO connection
-const socket = io();
+const socket = io.connect(
+  "http://" + document.domain + ":" + location.port,
+  {
+    transports: ["websocket"],
+  }
+);
 
 // Handle successful connection
 socket.on("connect", function () {
