@@ -5,8 +5,10 @@ metadata:
   name: flask-svc
   namespace: pc-k8s
 spec:
+  type: NodePort
   selector:
     app: flask
   ports:
     - protocol: TCP
       port: 5001
+      nodePort: 30001
