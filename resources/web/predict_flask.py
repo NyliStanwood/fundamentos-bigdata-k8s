@@ -1,4 +1,4 @@
-import sys, os, re
+import sys, os, re, logging
 from flask import Flask, render_template, request
 from pymongo import MongoClient
 from bson import json_util
@@ -13,10 +13,12 @@ import predict_utils
 # Set up Flask, Mongo and Elasticsearch
 app = Flask(__name__)
 
-if __name__ != '__main__':
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
+# Set up logging
+if __name__ == '__main__':
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.DEBUG)
 
 # Initialize SocketIO
 from flask_socketio import SocketIO, emit, join_room
@@ -592,7 +594,6 @@ def shutdown():
 if __name__ == "__main__":
     socketio.run(
     app,
-    debug=True,
     host='0.0.0.0',
     port=5001
   )
