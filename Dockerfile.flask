@@ -17,4 +17,4 @@ ENV PROJECT_HOME=/resources
 EXPOSE 5001
 
 # Default command
-CMD ["python", "predict_flask.py"]
+CMD ["python", "-u", "predict_flask.py"]
