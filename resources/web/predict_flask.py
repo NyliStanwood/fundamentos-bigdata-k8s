@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 # Initialize SocketIO
 from flask_socketio import SocketIO, emit, join_room
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
 
 client = MongoClient(host='mongo-svc', port=27017, username='root', password='example', authSource='admin')
 
