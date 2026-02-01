@@ -583,18 +583,12 @@ def shutdown():
   shutdown_server()
   return 'Server shutting down...'
 
-# if __name__ == "__main__":
-#     socketio.run(
-#     app,
-#     debug=True,
-#     host='0.0.0.0',
-#     port='5001',
-#     allow_unsafe_werkzeug=True
-#   
-
 if __name__ == "__main__":
-    app.run(
+    socketio.run(
+    app,
     debug=True,
     host='0.0.0.0',
-    port='5001'
+    port='5001',
+    allow_unsafe_werkzeug=True
   )
+  
