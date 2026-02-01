@@ -49,7 +49,7 @@ def kafka_consumer_thread():
     """Background thread that consumes from Kafka response topic and emits to WebSocket clients"""
     consumer = KafkaConsumer(
         RESPONSE_PREDICTION_TOPIC,
-        bootstrap_servers=['kafka:9092'],
+        bootstrap_servers=['kafka-svc:9092'],
         api_version=(0, 10),
         value_deserializer=lambda m: json.loads(m.decode('utf-8')),
         auto_offset_reset='latest',
