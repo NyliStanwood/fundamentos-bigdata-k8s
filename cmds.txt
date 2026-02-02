@@ -34,6 +34,7 @@ minikube -p practica-creativa image build -t flask-custom:3.5.3 -f Dockerfile.fl
 & minikube -p practica-creativa ssh docker images
 
 # create specifi namespace
+git pull
 kubectl create namespace pc-k8s
 kubectl apply -f k8s/
 kubectl get pods -n pc-k8s
@@ -67,7 +68,7 @@ kubectl delete namespace pc-k8s
 minikube stop -p practica-creativa
 minikube delete -p practica-creativa
 
-minikube delete -p practica-creativa
+
 
 & minikube -p practica-creativa docker-env -u | Invoke-Expression
 
@@ -79,7 +80,7 @@ minikube -p practica-creativa ip
 minikube -p practica-creativa tunnel
 minikube -p practica-creativa service flask-svc -n pc-k8s
 kubectl port-forward --address 0.0.0.0 -n pc-k8s svc/flask-svc 8888:5001
-
+kubectl port-forward --namespace pc-k8s --address 0.0.0.0 $(kubectl get pods --namespace pc-k8s -l 'app=flask' -o jsonpath='{.items[0].metadata.name}') 5001:5001
 
 SPARKSUBMIT 
 kubectl delete -n pc-k8s -f k8s/sparksubmit-job.yaml
@@ -100,8 +101,19 @@ kubectl delete -f k8s/kafka-init-job.yaml -n pc-k8s
 kubectl delete -f k8s/kafka-deployment.yaml -n pc-k8s
 kubectl apply -f k8s/
 kubectl get pods -n pc-k8s
-kubectl exec -n pc-k8s kafka-6896765b47-v8spb -- bash -c "/opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092"
+kubectl exec -n pc-k8s kafka-5f7f4df6fc-lfwnm  -- bash -c "/opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092"
+# Get the new pod name first
+kubectl get pods -n pc-k8s -l app=kafka
 
+
+echo '{"test":"message"}' | kubectl exec -i -n pc-k8s kafka-5f7f4df6fc-lfwnm  -- /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic flight-delay-ml-response
+
+kubectl exec -n pc-k8s kafka-5f7f4df6fc-lfwnm  -- /opt/kafka/bin/kafka-console-consumer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic flight-delay-ml-response \
+  --from-beginning
+
+kubectl exec -it -n pc-k8s kafka-5f7f4df6fc-lfwnm  -- /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic flight-delay-ml-response
 
 
 mongo
@@ -124,9 +136,19 @@ kubectl exec -it spark-worker-1-76bbf76bd4-9k2s9 -n pc-k8s -- /bin/bash
 mongosh -u root -p example
 
 
+#nginex
+kubectl get nodes -o wide
+minikube -p practica-creativa service -n ingress-nginx ingress-nginx-controller --url
+kubectl describe svc ingress-nginx-controller -n ingress-nginx
+kubectl get svc -n ingress-nginx
+kubectl describe svc ingress-nginx-controller -n ingress-nginx
+kubectl port-forward --namespace pc-k8s --address 0.0.0.0 service/flask-svc 5001:5001
+minikube -p practica-creativa tunnel
 
-# logs
-kubectl logs -n pc-k8s -f kafka-6896765b47-k9c7k 
 
 # describe PODS
 kubectl describe pod kafka-5b79dd7b94-jph77 -n pc-k8s
+
+# logs
+kubectl logs -n pc-k8s -f flask-55f74fd5f9-hx9cb
+kubectl logs -n pc-k8s kafka-6896765b47-wjz66
