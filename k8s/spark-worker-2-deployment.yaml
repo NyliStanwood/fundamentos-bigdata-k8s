@@ -19,6 +19,7 @@ spec:
       containers:
         - name: spark-worker-2
           image: spark-worker-2-custom:3.5.3
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081
           env:
@@ -35,14 +36,14 @@ spec:
             - name: SPARK_WORKER_CORES
               value: "1"
             - name: SPARK_WORKER_MEMORY
-              value: "512M"
+              value: "1536m"
 
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "0.5"
+              memory: "1.5Gi"
+              cpu: "1"
             limits:
-              memory: "768Mi"
+              memory: "1.5Gi"
               cpu: "1"
 
       restartPolicy: Always
